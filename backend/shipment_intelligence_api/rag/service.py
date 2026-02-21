@@ -3,7 +3,7 @@ from shipment_intelligence_api.infrastructure.vector_store.qdrant_store_manager 
 )
 from shipment_intelligence_api.rag.pipeline import ShipmentRAGPipeline
 from shipment_intelligence_api.rag.schema import (
-    ShipmentEventRequest,
+    IncomingCommunicationRequest,
     ShipmentRAGRequest,
     ShipmentRAGResponse,
 )
@@ -14,7 +14,9 @@ class ShipmentRAGService:
     """Service for shipment event ingestion and RAG queries."""
 
     def __init__(
-        self, pipeline: ShipmentRAGPipeline, qdrant_store_manager: QdrantVectorStoreManager
+        self,
+        pipeline: ShipmentRAGPipeline,
+        qdrant_store_manager: QdrantVectorStoreManager,
     ) -> None:
         """Initialize shipment RAG service.
 
@@ -25,8 +27,10 @@ class ShipmentRAGService:
         self.pipeline = pipeline
         self.qdrant_store_manager = qdrant_store_manager
 
-    def ingest_event(self, request: ShipmentEventRequest) -> dict:
+    def ingest_event(self, request: IncomingCommunicationRequest) -> dict:
         """Ingest a shipment event into the vector store.
+        This can be an email, SMS, or call transcript related to a shipment.
+        The service extracts the shipment ID from the content and stores the event as a document in the qdrant vector store for later retrieval during RAG queries.
 
         Args:
             request: Shipment event data to ingest.
@@ -35,10 +39,11 @@ class ShipmentRAGService:
             Dict with status message.
         """
         doc = Document(
-            page_content=request.description,
+            page_content=request.content,
             metadata={
                 "shipment_id": request.shipment_id,
-                "event_type": request.event_type,
+                # "event_type": request.event_type,
+                "channel": request.channel,
                 "source": request.source,
                 "timestamp": request.timestamp,
             },
@@ -46,7 +51,10 @@ class ShipmentRAGService:
 
         self.qdrant_store_manager.add_documents(docs=[doc])
 
-        return {"status": "event ingested successfully"}
+        return {
+            "status": "event ingested successfully",
+            "shipment_id": request.shipment_id,
+        }
 
     def run(self, request: ShipmentRAGRequest) -> ShipmentRAGResponse:
         """Execute RAG query for shipment intelligence.

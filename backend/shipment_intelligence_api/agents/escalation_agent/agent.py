@@ -1,4 +1,5 @@
 from functools import partial
+from langchain_core.language_models import BaseChatModel
 from langgraph.graph.state import CompiledStateGraph
 from langchain_core.prompts import (
     ChatPromptTemplate,
@@ -17,15 +18,14 @@ from shipment_intelligence_api.agents.escalation_agent.tool import (
     send_sms,
 )
 from shipment_intelligence_api.agents.orchestrator.state import ShipmentWorkflowState
-from shipment_intelligence_api.infrastructure.llm.llm_provider import get_llm
 
 
 class EscalationAgent:
     """Executes notifications, creates tickets, and logs communications."""
 
-    def __init__(self):
+    def __init__(self, llm: BaseChatModel):
         self.tools = [send_email, send_sms, create_support_ticket]
-        self.llm = get_llm()
+        self.llm: BaseChatModel = llm
         self.llm_with_tools = self.llm.bind_tools(self.tools)
         self.compiled_graph: CompiledStateGraph = self._build_graph()
 

@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
 from shipment_intelligence_api.rag.schema import (
-    ShipmentEventRequest,
+    IncomingCommunicationRequest,
     ShipmentRAGRequest,
     ShipmentRAGResponse,
 )
@@ -19,7 +19,7 @@ router = APIRouter(prefix="/rag", tags=["RAG"])
     ),
 )
 def ingest_event(
-    request: ShipmentEventRequest,
+    request: IncomingCommunicationRequest,
     rag_service: ShipmentRAGService = Depends(get_rag_service),
 ):
     """Store a shipment event in the vector database.

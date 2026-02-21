@@ -3,6 +3,16 @@ from langchain_core.language_models import BaseChatModel
 from langchain_core.embeddings import Embeddings
 from qdrant_client import QdrantClient
 
+from shipment_intelligence_api.agents.analysis_agent.agent import ShipmentAnalysisAgent
+from shipment_intelligence_api.agents.escalation_agent.agent import EscalationAgent
+from shipment_intelligence_api.agents.orchestrator.workflow import (
+    ShipmentIntelligenceOrchestrator,
+)
+from shipment_intelligence_api.agents.response_agent.agent import ShipmentResponseAgent
+from shipment_intelligence_api.agents.retrieval_agent.agent import (
+    ShipmentRetrievalAgent,
+)
+from shipment_intelligence_api.agents.service import ShipmentIntelligenceAgentService
 from shipment_intelligence_api.infrastructure.embeddings.embedding_provider import (
     get_embeddings,
 )
@@ -62,3 +72,46 @@ def get_rag_service() -> ShipmentRAGService:
         pipeline=get_rag_pipeline(),
         qdrant_store_manager=get_qdrant_store_manager_instance(),
     )
+
+
+@lru_cache()
+def get_retrieval_agent() -> ShipmentRetrievalAgent:
+    """Get cached retrieval agent."""
+    return ShipmentRetrievalAgent(
+        llm=get_llm_instance(),
+        qdrant_store_manager=get_qdrant_store_manager_instance(),
+    )
+
+
+@lru_cache()
+def get_analysis_agent() -> ShipmentAnalysisAgent:
+    """Get cached analysis agent."""
+    return ShipmentAnalysisAgent(llm=get_llm_instance())
+
+
+@lru_cache()
+def get_response_agent() -> ShipmentResponseAgent:
+    """Get cached response agent."""
+    return ShipmentResponseAgent(llm=get_llm_instance())
+
+
+@lru_cache()
+def get_escalation_agent() -> EscalationAgent:
+    """Get cached escalation agent."""
+    return EscalationAgent(llm=get_llm_instance())
+
+
+@lru_cache()
+def get_orchestrator() -> ShipmentIntelligenceOrchestrator:
+    """Get cached orchestrator with all agents."""
+    return ShipmentIntelligenceOrchestrator(
+        retrieval_agent=get_retrieval_agent(),
+        analysis_agent=get_analysis_agent(),
+        response_agent=get_response_agent(),
+        escalation_agent=get_escalation_agent(),
+    )
+
+
+@lru_cache()
+def get_agent_service() -> ShipmentIntelligenceAgentService:
+    return ShipmentIntelligenceAgentService(orchestrator=get_orchestrator())

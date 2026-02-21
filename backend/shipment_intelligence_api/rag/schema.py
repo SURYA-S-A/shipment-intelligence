@@ -1,41 +1,28 @@
 from datetime import datetime
-from typing import List
+from typing import List, Literal
 from langchain_core.documents import Document
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
+
+from shipment_intelligence_api.shared.utils import extract_shipment_id
 
 
-class ShipmentEventRequest(BaseModel):
-    """Request model for ingesting a shipment event into the vector store."""
-
-    shipment_id: str = Field(
-        ...,
-        description="Unique identifier for the shipment.",
-        example="SH12345",
+class IncomingCommunicationRequest(BaseModel):
+    channel: Literal["email", "sms", "call"] = Field(
+        ..., description="Type of incoming communication."
     )
 
-    event_type: str = Field(
-        ...,
-        description="Type of shipment event (e.g., EMAIL, STATUS_UPDATE, ALERT).",
-        example="EMAIL",
-    )
+    source: str = Field(..., description="Sender email or phone number.")
 
-    source: str = Field(
-        ...,
-        description="Source system or sender of the event.",
-        example="ops@carrier.com",
-    )
+    content: str = Field(..., description="Email body, SMS text, or call transcript.")
 
-    description: str = Field(
-        ...,
-        description="Detailed description of the shipment event.",
-        example="Shipment delayed due to customs inspection.",
-    )
+    timestamp: datetime = Field(..., description="Event timestamp in ISO format.")
 
-    timestamp: datetime = Field(
-        ...,
-        description="Timestamp when the event occurred (ISO format).",
-        example="2026-02-14T10:30:00",
-    )
+    shipment_id: str | None = None  # auto-populated
+
+    @model_validator(mode="after")
+    def set_shipment_id(cls, values):
+        values.shipment_id = extract_shipment_id(values.content)
+        return values
 
 
 class ShipmentRAGRequest(BaseModel):

@@ -1,0 +1,1 @@
+SHIPMENT_PATTERN = r"SHP\d+"

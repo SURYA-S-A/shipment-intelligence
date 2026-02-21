@@ -1,3 +1,4 @@
+from langchain_core.language_models import BaseChatModel
 from langgraph.graph.state import CompiledStateGraph
 from langchain_core.prompts import (
     ChatPromptTemplate,
@@ -10,7 +11,6 @@ from shipment_intelligence_api.agents.analysis_agent.prompts import (
 )
 from shipment_intelligence_api.agents.analysis_agent.tools import check_weather
 from shipment_intelligence_api.agents.orchestrator.state import ShipmentWorkflowState
-from shipment_intelligence_api.infrastructure.llm.llm_provider import get_llm
 from langgraph.graph.message import add_messages
 from langgraph.prebuilt.tool_node import ToolNode, tools_condition
 from functools import partial
@@ -19,9 +19,9 @@ from functools import partial
 class ShipmentAnalysisAgent:
     """Analyzes retrieved documents and generates insights using available tools."""
 
-    def __init__(self):
+    def __init__(self, llm: BaseChatModel):
         self.tools = [check_weather]
-        self.llm = get_llm()
+        self.llm: BaseChatModel = llm
         self.llm_with_tools = self.llm.bind_tools(self.tools)
         self.compiled_graph: CompiledStateGraph = self._build_graph()
 

@@ -1,21 +1,14 @@
-from shipment_intelligence_api.agents.analysis_agent.agent import ShipmentAnalysisAgent
-from shipment_intelligence_api.agents.escalation_agent.agent import EscalationAgent
-from shipment_intelligence_api.agents.orchestrator.workflow import (
-    ShipmentIntelligenceOrchestrator,
-)
-from shipment_intelligence_api.agents.response_agent.agent import ShipmentResponseAgent
-from shipment_intelligence_api.agents.retrieval_agent.agent import (
-    ShipmentRetrievalAgent,
-)
+from shipment_intelligence_api.core.dependencies import get_agent_service
+from langgraph.graph.state import CompiledStateGraph
 
 
-def generate_mermaid_graph(orchestrator: ShipmentIntelligenceOrchestrator):
+def generate_mermaid_graph(compiled_graph: CompiledStateGraph):
     """Generate and save mermaid graph"""
     print(f"\n{'='*70}")
     print("Mermaid Graph for Shipment Intelligence Orchestrator")
     print(f"{'='*70}\n")
 
-    mermaid_graph = orchestrator.compiled_graph.get_graph(xray=True).draw_mermaid()
+    mermaid_graph = compiled_graph.get_graph(xray=True).draw_mermaid()
     mermaid_graph = (
         mermaid_graph.replace("\\5b", "_").replace("\\5d", "_").replace("\\2e", "_")
     )
@@ -47,22 +40,15 @@ def pretty_print_messages(title: str, messages: list):
 
 if __name__ == "__main__":
     print("Initializing agents...")
-    retrieval_agent = ShipmentRetrievalAgent()
-    analysis_agent = ShipmentAnalysisAgent()
-    response_agent = ShipmentResponseAgent()
-    escalation_agent = EscalationAgent()
-
-    orchestrator = ShipmentIntelligenceOrchestrator(
-        retrieval_agent, analysis_agent, response_agent, escalation_agent
-    )
+    agent_service = get_agent_service()
 
     # Generate mermaid graph
-    generate_mermaid_graph(orchestrator)
+    generate_mermaid_graph(agent_service.orchestrator.compiled_graph)
 
     print("Running orchestrator with sample query...")
 
-    response = orchestrator.run(
-        query="What is the status of shipment SHP1003 and are there any issues?"
+    response = agent_service.process_query(
+        query="delay reason customer complaint urgency escalation history - SHP1009"
     )
 
     print("Orchestrator run complete. Output:\n")

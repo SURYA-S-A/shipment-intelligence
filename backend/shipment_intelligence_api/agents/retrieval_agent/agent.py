@@ -1,3 +1,4 @@
+from langchain.chat_models import BaseChatModel
 from langgraph.graph.state import CompiledStateGraph
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain.messages import SystemMessage
@@ -9,14 +10,19 @@ from shipment_intelligence_api.agents.retrieval_agent.prompts import (
 from shipment_intelligence_api.agents.retrieval_agent.schema import (
     ShipmentRetrievalOutput,
 )
-from shipment_intelligence_api.infrastructure.llm.llm_provider import get_llm
+from shipment_intelligence_api.infrastructure.vector_store.qdrant_store_manager import (
+    QdrantVectorStoreManager,
+)
 
 
 class ShipmentRetrievalAgent:
     """Extracts shipment ID and fetches related documents and customer data."""
 
-    def __init__(self):
-        self.llm = get_llm()
+    def __init__(
+        self, llm: BaseChatModel, qdrant_store_manager: QdrantVectorStoreManager
+    ):
+        self.llm: BaseChatModel = llm
+        self.qdrant_store_manager: QdrantVectorStoreManager = qdrant_store_manager
         self.llm_with_structured_output = self.llm.with_structured_output(
             ShipmentRetrievalOutput
         )
@@ -42,59 +48,12 @@ class ShipmentRetrievalAgent:
     def _fetch_shipment_data(self, state: ShipmentWorkflowState):
         shipment_id = state.get("shipment_id")
         print(f" [Node] Fetching shipment data for shipment ID: {shipment_id}")
-        sample_docs = [
-            {
-                "page_content": "Shipment departed late from NYC due to operational delay.",
-                "metadata": {
-                    "shipment_id": "SHP1003",
-                    "source": "tms_system",
-                    "doc_type": "status_update",
-                    "timestamp": "2026-02-10T10:30:00",
-                },
-                "score": 0.92,
-            },
-            {
-                "page_content": "Weather was rainy in NYC at time of departure.",
-                "metadata": {
-                    "shipment_id": "SHP1003",
-                    "source": "tms_system",
-                    "doc_type": "weather_info",
-                    "timestamp": "2026-02-10T09:00:00",
-                },
-                "score": 0.88,
-            },
-            {
-                "page_content": "Shipment currently in Chicago and expected to arrive in Miami next week.",
-                "metadata": {
-                    "shipment_id": "SHP1003",
-                    "source": "tracking_service",
-                    "doc_type": "location_update",
-                    "timestamp": "2026-02-14T14:15:00",
-                },
-                "score": 0.95,
-            },
-            {
-                "page_content": "Shipment will be delayed again due to storm in Chicago.",
-                "metadata": {
-                    "shipment_id": "SHP1003",
-                    "source": "email",
-                    "doc_type": "delay_notice",
-                    "timestamp": "2026-02-15T08:00:00",
-                },
-                "score": 0.90,
-            },
-        ]
 
-        # TODO: Replace with RAG retrieval from vector database and document store
+        retrieved_docs = self.qdrant_store_manager.query(
+            shipment_id=shipment_id, query=state["question"]
+        )
 
-        return {
-            "retrieved_docs": "\n\n".join(
-                [
-                    f"{doc['page_content']} (Source: {doc['metadata']['source']}) (Score: {doc['score']} (Doc Type: {doc['metadata']['doc_type']} Timestamp: {doc['metadata']['timestamp']}))"
-                    for doc in sample_docs
-                ]
-            )
-        }
+        return {"retrieved_docs": retrieved_docs}
 
     def _fetch_customer_data(self, state: ShipmentWorkflowState):
         shipment_id = state.get("shipment_id")

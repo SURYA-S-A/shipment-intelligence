@@ -1,3 +1,4 @@
+from langchain.chat_models import BaseChatModel
 from langgraph.graph.state import CompiledStateGraph
 from langchain_core.prompts import (
     ChatPromptTemplate,
@@ -12,14 +13,13 @@ from shipment_intelligence_api.agents.response_agent.prompts import (
 from shipment_intelligence_api.agents.response_agent.schema import (
     ShipmentResponseOutput,
 )
-from shipment_intelligence_api.infrastructure.llm.llm_provider import get_llm
 
 
 class ShipmentResponseAgent:
     """Generates structured summaries with confidence scores and escalation decisions."""
 
-    def __init__(self):
-        self.llm = get_llm()
+    def __init__(self, llm: BaseChatModel):
+        self.llm: BaseChatModel = llm
         self.llm_with_structured_output = self.llm.with_structured_output(
             ShipmentResponseOutput
         )
