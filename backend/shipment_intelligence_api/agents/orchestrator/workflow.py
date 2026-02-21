@@ -74,6 +74,7 @@ class ShipmentIntelligenceOrchestrator:
         """
         response = self.compiled_graph.invoke(
             {
+                "question": query,
                 "retrieval_agent_messages": [
                     HumanMessage(content=f"Extract shipment information from: {query}")
                 ],
