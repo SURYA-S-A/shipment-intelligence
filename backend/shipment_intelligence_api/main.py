@@ -7,6 +7,7 @@ from shipment_intelligence_api.health.router import (
     router as health_router,
 )
 from shipment_intelligence_api.rag.router import router as rag_router
+from shipment_intelligence_api.agents.router import router as agents_router
 
 
 @asynccontextmanager
@@ -36,3 +37,4 @@ app = FastAPI(
 
 app.include_router(health_router)
 app.include_router(rag_router)
+app.include_router(agents_router)
