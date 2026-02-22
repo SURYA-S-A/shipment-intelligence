@@ -1,4 +1,5 @@
 from fastapi import APIRouter, BackgroundTasks, Depends
+from shipment_intelligence_api.agents.constants import CommunicationChannel
 from shipment_intelligence_api.agents.schema import (
     IncomingCommunicationRequest,
 )
@@ -23,6 +24,7 @@ def handle_incoming_communication(
     agent_service: ShipmentIntelligenceAgentService = Depends(get_agent_service),
     rag_service: ShipmentRAGService = Depends(get_rag_service),
 ):
-    rag_service.ingest_event(request)
+    if request.channel != CommunicationChannel.TMS_EVENT:
+        rag_service.ingest_event(request)
     background_tasks.add_task(agent_service.process_query, request.shipment_id)
     return {"message": "Communication received", "shipment_id": request.shipment_id}

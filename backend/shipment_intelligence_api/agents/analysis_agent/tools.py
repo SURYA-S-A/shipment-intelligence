@@ -7,13 +7,12 @@ def check_weather(location: str) -> str:
     """Check the current weather for a given location.
 
     Args:
-        location: City name related to the shipment route.
+        location: City name only, without state or country suffix.
     """
-    data = WEATHER_DATA.get(location)
+    # Normalize — strip state suffix like ", PA" or ", NY"
+    normalized = location.split(",")[0].strip()
+
+    data = WEATHER_DATA.get(normalized)
     if not data:
-        result = f"Weather data not available for {location}"
-    else:
-        result = (
-            f"{location}: {data['condition']}, {data['temp']}, Wind: {data['wind']}"
-        )
-    return result
+        return f"Weather data not available for {normalized}"
+    return f"{normalized}: {data['condition']}, {data['temp']}, Wind: {data['wind']}"
