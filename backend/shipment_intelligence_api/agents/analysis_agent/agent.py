@@ -50,7 +50,7 @@ class ShipmentAnalysisAgent:
             state["analysis_agent_messages"], [response]
         )
         state["detailed_analysis"] = (
-            state.get("detailed_analysis", "") + "\n" + str(response)
+            state.get("detailed_analysis", "") + "\n" + str(response.content)
         )
         return state
 
