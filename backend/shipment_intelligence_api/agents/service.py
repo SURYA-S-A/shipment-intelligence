@@ -5,6 +5,9 @@ from shipment_intelligence_api.shared.utils import (
     get_file,
     write_response,
 )
+from shipment_intelligence_api.core.logging import get_logger
+
+logger = get_logger(__name__)
 
 
 class ShipmentIntelligenceAgentService:
@@ -24,4 +27,4 @@ class ShipmentIntelligenceAgentService:
 
         write_response(shipment_id, response)
 
-        print(f"Done → progress/{shipment_id}.txt")
+        logger.info(f"Completed processing for shipment ID: {shipment_id}")

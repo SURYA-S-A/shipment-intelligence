@@ -40,3 +40,9 @@ Thumbs.db
 
 # Qdrant data files
 qdrant_data/
+
+# Progress files
+progress/
+
+# Logs
+logs/

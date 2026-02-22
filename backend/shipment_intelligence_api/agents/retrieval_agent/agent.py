@@ -17,6 +17,9 @@ from shipment_intelligence_api.agents.retrieval_agent.schema import (
 from shipment_intelligence_api.infrastructure.vector_store.qdrant_store_manager import (
     QdrantVectorStoreManager,
 )
+from shipment_intelligence_api.core.logging import get_logger
+
+logger = get_logger(__name__)
 
 
 class ShipmentRetrievalAgent:
@@ -33,7 +36,7 @@ class ShipmentRetrievalAgent:
         self.compiled_graph: CompiledStateGraph = self._build_graph()
 
     def _agent(self, state: ShipmentWorkflowState):
-        print("Running Shipment Retrieval Agent...")
+        logger.info("Running Shipment Retrieval Agent...")
         agent_prompt = ChatPromptTemplate(
             [
                 SystemMessage(content=SHIPMENT_RETRIEVAL_AGENT_SYSTEM_PROMPT),
@@ -47,11 +50,12 @@ class ShipmentRetrievalAgent:
         )
 
         state["shipment_id"] = structured_response.shipment_id
+        logger.debug(f"Extracted shipment ID: {structured_response.shipment_id}")
         return state
 
     def _fetch_shipment_event(self, state: ShipmentWorkflowState):
         shipment_id = state.get("shipment_id")
-        print(f" [Node] Fetching shipment data for shipment ID: {shipment_id}")
+        logger.info(f"Fetching shipment events for {shipment_id}")
 
         retrieved_docs = self.qdrant_store_manager.query(
             shipment_id=shipment_id, query=state["question"]
@@ -61,6 +65,7 @@ class ShipmentRetrievalAgent:
 
     def _fetch_tms_data(self, state: ShipmentWorkflowState):
         shipment_id = state.get("shipment_id")
+        logger.info(f"Fetching TMS data for {shipment_id}")
         data = get_tms_data(shipment_id)
         return {
             "tms_data": f"Status: {data['status']}, Origin: {data['origin']}, Destination: {data['destination']}, Carrier: {data['carrier']}, Planned Arrival: {data['planned_arrival']}, Estimated Arrival: {data['estimated_arrival']}, Delay (min): {data['delay_minutes']}, SLA Breach: {data['sla_breach']}."
@@ -68,6 +73,7 @@ class ShipmentRetrievalAgent:
 
     def _fetch_customer_data(self, state: ShipmentWorkflowState):
         shipment_id = state.get("shipment_id")
+        logger.info(f"Fetching customer data for {shipment_id}")
         data = get_customer_data(shipment_id)
         return {
             "customer_name": data["customer_name"],

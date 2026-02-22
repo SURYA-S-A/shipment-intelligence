@@ -14,6 +14,9 @@ from shipment_intelligence_api.agents.orchestrator.state import ShipmentWorkflow
 from langgraph.graph.message import add_messages
 from langgraph.prebuilt.tool_node import ToolNode, tools_condition
 from functools import partial
+from shipment_intelligence_api.core.logging import get_logger
+
+logger = get_logger(__name__)
 
 
 class ShipmentAnalysisAgent:
@@ -26,7 +29,7 @@ class ShipmentAnalysisAgent:
         self.compiled_graph: CompiledStateGraph = self._build_graph()
 
     def _agent(self, state: ShipmentWorkflowState):
-        print("Running Shipment Analysis Agent...")
+        logger.info("Running Shipment Analysis Agent...")
         agent_prompt = ChatPromptTemplate(
             [
                 SystemMessagePromptTemplate.from_template(
@@ -52,6 +55,7 @@ class ShipmentAnalysisAgent:
         state["detailed_analysis"] = (
             state.get("detailed_analysis", "") + "\n" + str(response.content)
         )
+        logger.debug(f"Analysis complete: {response.content}")
         return state
 
     def _build_graph(self) -> CompiledStateGraph:

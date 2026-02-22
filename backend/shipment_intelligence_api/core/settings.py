@@ -3,12 +3,16 @@ from pydantic import model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from shipment_intelligence_api.core.constants import (
     EmbeddingProvider,
+    Environment,
     LLMProvider,
     QdrantStoreMode,
 )
 
 
 class Settings(BaseSettings):
+    # Environment config
+    ENVIRONMENT: Environment = Environment.DEVELOPMENT
+
     # LLM config
     LLM_PROVIDER: LLMProvider
     LLM_MODEL: str

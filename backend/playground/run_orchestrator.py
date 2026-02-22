@@ -4,6 +4,9 @@ from shipment_intelligence_api.shared.utils import (
     write_mermaid_graph,
     write_response,
 )
+from shipment_intelligence_api.core.logging import get_logger
+
+logger = get_logger(__name__)
 
 
 if __name__ == "__main__":
@@ -21,4 +24,4 @@ if __name__ == "__main__":
     write_mermaid_graph(agent_service.orchestrator.compiled_graph, shipment_id)
     write_response(shipment_id, response)
 
-    print(f"Done → progress/{shipment_id}.txt")
+    logger.info(f"Completed processing for shipment ID: {shipment_id}")

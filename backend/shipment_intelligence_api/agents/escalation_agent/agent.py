@@ -18,6 +18,9 @@ from shipment_intelligence_api.agents.escalation_agent.tool import (
     send_sms,
 )
 from shipment_intelligence_api.agents.orchestrator.state import ShipmentWorkflowState
+from shipment_intelligence_api.core.logging import get_logger
+
+logger = get_logger(__name__)
 
 
 class EscalationAgent:
@@ -30,9 +33,8 @@ class EscalationAgent:
         self.compiled_graph: CompiledStateGraph = self._build_graph()
 
     def _agent(self, state: ShipmentWorkflowState):
-        print(
-            f"Escalation Agent processing escalation with response output: {state.get('response_output', {})}"
-        )
+        logger.info("Running Escalation Agent...")
+        logger.debug(f"Response output: {state.get('response_output', {})}")
 
         agent_prompt = ChatPromptTemplate(
             [

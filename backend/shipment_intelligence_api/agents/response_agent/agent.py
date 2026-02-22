@@ -13,6 +13,9 @@ from shipment_intelligence_api.agents.response_agent.prompts import (
 from shipment_intelligence_api.agents.response_agent.schema import (
     ShipmentResponseOutput,
 )
+from shipment_intelligence_api.core.logging import get_logger
+
+logger = get_logger(__name__)
 
 
 class ShipmentResponseAgent:
@@ -26,7 +29,7 @@ class ShipmentResponseAgent:
         self.compiled_graph: CompiledStateGraph = self._build_graph()
 
     def _agent(self, state: ShipmentWorkflowState):
-        print("Running Shipment Response Agent...")
+        logger.info("Running Shipment Response Agent...")
         agent_prompt = ChatPromptTemplate.from_messages(
             [
                 SystemMessagePromptTemplate.from_template(
@@ -45,7 +48,7 @@ class ShipmentResponseAgent:
             }
         )
 
-        print(f"Response Agent completed with output: {structured_response}")
+        logger.debug(f"Response Agent output: {structured_response}")
         state["should_escalate"] = structured_response.should_escalate
         state["response_output"] = structured_response.model_dump()
 

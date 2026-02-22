@@ -3,11 +3,15 @@ from contextlib import asynccontextmanager
 from shipment_intelligence_api.core.dependencies import (
     get_qdrant_store_manager_instance,
 )
+from shipment_intelligence_api.core.exceptions import global_exception_handler
 from shipment_intelligence_api.health.router import (
     router as health_router,
 )
 from shipment_intelligence_api.rag.router import router as rag_router
 from shipment_intelligence_api.agents.router import router as agents_router
+from shipment_intelligence_api.core.logging import get_logger
+
+logger = get_logger(__name__)
 
 
 @asynccontextmanager
@@ -16,15 +20,14 @@ async def lifespan(app: FastAPI):
 
     Initializes resources on startup and cleans up on shutdown.
     """
-    # Application Startup
-    print("Initializing application...")
+    logger.info("Initializing application...")
     get_qdrant_store_manager_instance()
-    print("Vector store initialized")
+    logger.info("Vector store initialized")
 
     yield
 
     # Application Shutdown
-    print("Shutting down application...")
+    logger.info("Shutting down application...")
 
 
 app = FastAPI(
@@ -34,6 +37,8 @@ app = FastAPI(
     docs_url="/swagger",
     lifespan=lifespan,
 )
+
+app.add_exception_handler(Exception, global_exception_handler)
 
 app.include_router(health_router)
 app.include_router(rag_router)

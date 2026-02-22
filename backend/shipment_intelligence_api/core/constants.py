@@ -20,3 +20,8 @@ class QdrantStoreMode(str, Enum):
 
     LOCAL = "local"
     REMOTE = "remote"
+
+
+class Environment(str, Enum):
+    DEVELOPMENT = "development"
+    PRODUCTION = "production"

@@ -5,6 +5,9 @@ from langchain_qdrant import QdrantVectorStore
 from qdrant_client.models import VectorParams, Distance, PayloadSchemaType
 from langchain_core.embeddings import Embeddings
 from shipment_intelligence_api.core.settings import settings
+from shipment_intelligence_api.core.logging import get_logger
+
+logger = get_logger(__name__)
 
 
 class QdrantVectorStoreManager:
@@ -42,10 +45,12 @@ class QdrantVectorStoreManager:
                 field_name="metadata.shipment_id",
                 field_schema=PayloadSchemaType.KEYWORD,
             )
-            print(f"Created collection '{self.collection_name}' with shipment_id index")
+            logger.info(
+                f"Created collection '{self.collection_name}' with shipment_id index"
+            )
 
         else:
-            print(f"Collection '{self.collection_name}' already exists")
+            logger.info(f"Collection '{self.collection_name}' already exists")
 
     def _get_vector_store(self) -> QdrantVectorStore:
         """Get LangChain QdrantVectorStore wrapper.

@@ -10,6 +10,9 @@ from shipment_intelligence_api.agents.response_agent.agent import ShipmentRespon
 from shipment_intelligence_api.agents.retrieval_agent.agent import (
     ShipmentRetrievalAgent,
 )
+from shipment_intelligence_api.core.logging import get_logger
+
+logger = get_logger(__name__)
 
 
 class ShipmentIntelligenceOrchestrator:
@@ -40,7 +43,7 @@ class ShipmentIntelligenceOrchestrator:
         self, state: ShipmentWorkflowState
     ) -> Literal["escalation", "__end__"]:
         should_escalate = state.get("should_escalate", False)
-        print(f"Decision to escalate: {should_escalate}")
+        logger.info(f"Escalation decision: {should_escalate}")
         return "escalation" if should_escalate else "__end__"
 
     def _build_graph(self):

@@ -1,4 +1,4 @@
-from langchain_core.tools import StructuredTool, tool
+from langchain_core.tools import tool
 
 
 @tool
@@ -14,9 +14,6 @@ def send_email(recipient: str, subject: str, body: str) -> str:
         subject: Short message title.
         body: Full message content.
     """
-    print(f"  [TOOL] Sending email to recipient: {recipient}")
-    print(f"	Subject: {subject}")
-    print(f"	Body: {body}")
     # TODO: Integrate with email service provider
     return f"Email sent successfully to {recipient}"
 
@@ -33,8 +30,6 @@ def send_sms(message: str, phone_number: str) -> str:
         message: Short alert message.
         phone_number: Recipient phone number.
     """
-    print(f"  [TOOL] Sending SMS to phone number: {phone_number}")
-    print(f"	Message: {message}")
     # TODO: Integrate with SMS service provider
     return f"SMS sent successfully to {phone_number}"
 
@@ -55,8 +50,5 @@ def create_support_ticket(
         issue: Description of the problem.
         priority: low, medium, high, or critical.
     """
-    print(f"  [TOOL] Creating support ticket for shipment ID: {shipment_id}")
-    print(f"	Issue: {issue}")
-    print(f"	Priority: {priority}")
     # TODO: Integrate with support ticket management system
     return f"Support ticket created for shipment {shipment_id} with priority {priority}"
