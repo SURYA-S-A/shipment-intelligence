@@ -1,0 +1,31 @@
+services:
+
+  qdrant:
+    image: qdrant/qdrant:latest
+    container_name: shipment-intelligence-qdrant
+    ports:
+      - "6333:6333"
+    environment:
+      QDRANT__SERVICE__API_KEY: "mysecretapikey"
+    networks:
+      - shipment-intelligence-network
+    restart: unless-stopped
+
+  shipment-intelligence-api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: shipment-intelligence-api
+    ports:
+      - "8100:8100"
+    env_file:
+      - ./backend/.env
+    depends_on:
+      - qdrant
+    networks:
+      - shipment-intelligence-network
+    restart: unless-stopped
+
+networks:
+  shipment-intelligence-network:
+    driver: bridge
