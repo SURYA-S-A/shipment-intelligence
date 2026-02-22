@@ -15,6 +15,10 @@ class EmbeddingProvider(str, Enum):
     GOOGLE_GENAI = "google_genai"
 
 
+class SparseEmbeddingProvider(str, Enum):
+    FASTEMBED = "fastembed"
+
+
 class QdrantStoreMode(str, Enum):
     """Enum for Qdrant vector store operation modes."""
 

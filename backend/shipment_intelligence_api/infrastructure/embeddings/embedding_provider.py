@@ -1,7 +1,11 @@
-from shipment_intelligence_api.core.constants import EmbeddingProvider
+from shipment_intelligence_api.core.constants import (
+    EmbeddingProvider,
+    SparseEmbeddingProvider,
+)
 from shipment_intelligence_api.core.settings import settings
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from langchain_core.embeddings import Embeddings
+from langchain_qdrant import FastEmbedSparse
 
 
 def get_embeddings() -> Embeddings:
@@ -20,3 +24,20 @@ def get_embeddings() -> Embeddings:
         )
 
     raise ValueError(f"Unsupported embedding provider: {settings.EMBEDDING_PROVIDER}")
+
+
+def get_sparse_embeddings() -> FastEmbedSparse:
+    """Get configured sparse embeddings model.
+
+    Returns:
+        FastEmbedSparse: Initialized sparse embedding model.
+
+    Raises:
+        ValueError: If unsupported sparse embedding provider is configured.
+    """
+    if settings.SPARSE_EMBEDDING_PROVIDER == SparseEmbeddingProvider.FASTEMBED:
+        return FastEmbedSparse(model_name=settings.SPARSE_EMBEDDING_MODEL)
+
+    raise ValueError(
+        f"Unsupported sparse embedding provider: {settings.SPARSE_EMBEDDING_PROVIDER}"
+    )

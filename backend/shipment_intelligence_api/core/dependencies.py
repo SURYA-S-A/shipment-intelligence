@@ -15,6 +15,7 @@ from shipment_intelligence_api.agents.retrieval_agent.agent import (
 from shipment_intelligence_api.agents.service import ShipmentIntelligenceAgentService
 from shipment_intelligence_api.infrastructure.embeddings.embedding_provider import (
     get_embeddings,
+    get_sparse_embeddings,
 )
 from shipment_intelligence_api.infrastructure.llm.llm_provider import get_llm
 from shipment_intelligence_api.infrastructure.vector_store.qdrant_client_provider import (
@@ -25,6 +26,7 @@ from shipment_intelligence_api.infrastructure.vector_store.qdrant_store_manager 
 )
 from shipment_intelligence_api.rag.pipeline import ShipmentRAGPipeline
 from shipment_intelligence_api.rag.service import ShipmentRAGService
+from langchain_qdrant import FastEmbedSparse
 
 
 @lru_cache()
@@ -40,6 +42,12 @@ def get_embeddings_instance() -> Embeddings:
 
 
 @lru_cache()
+def get_sparse_embeddings_instance() -> FastEmbedSparse:
+    """Get cached sparse embeddings instance."""
+    return get_sparse_embeddings()
+
+
+@lru_cache()
 def get_qdrant_client_instance() -> QdrantClient:
     """Get cached Qdrant client."""
     return get_qdrant_client()
@@ -51,6 +59,7 @@ def get_qdrant_store_manager_instance() -> QdrantVectorStoreManager:
     manager = QdrantVectorStoreManager(
         client=get_qdrant_client_instance(),
         embeddings=get_embeddings_instance(),
+        sparse_embeddings=get_sparse_embeddings_instance(),
     )
     manager.init_collection()
     return manager

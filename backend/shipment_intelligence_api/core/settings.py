@@ -6,6 +6,7 @@ from shipment_intelligence_api.core.constants import (
     Environment,
     LLMProvider,
     QdrantStoreMode,
+    SparseEmbeddingProvider,
 )
 
 
@@ -22,6 +23,10 @@ class Settings(BaseSettings):
     EMBEDDING_PROVIDER: EmbeddingProvider
     EMBEDDING_MODEL: str
     EMBEDDING_API_KEY: Optional[str] = None
+
+    # Sparse embedding config
+    SPARSE_EMBEDDING_PROVIDER: SparseEmbeddingProvider
+    SPARSE_EMBEDDING_MODEL: str
 
     # Qdrant store config
     QDRANT_MODE: QdrantStoreMode
