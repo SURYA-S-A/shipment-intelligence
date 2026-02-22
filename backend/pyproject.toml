@@ -17,6 +17,8 @@ dependencies = [
     "langchain-community (>=0.4.1,<0.5.0)",
     "langchain-openai (>=1.1.9,<2.0.0)",
     "langchain-core (>=1.2.13,<2.0.0)",
+    "fastembed (>=0.7.4,<0.8.0)",
+    "langchain-text-splitters (>=1.1.1,<2.0.0)",
 ]
 
 [build-system]
