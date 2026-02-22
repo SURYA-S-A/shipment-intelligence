@@ -11,6 +11,7 @@ class ShipmentWorkflowState(TypedDict):
     retrieval_agent_messages: Annotated[list[AnyMessage], add_messages]
     shipment_id: str
     retrieved_docs: str
+    tms_data: str
     customer_name: str
     customer_phone_number: str
     customer_email: str

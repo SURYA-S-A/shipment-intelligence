@@ -41,6 +41,7 @@ class ShipmentAnalysisAgent:
         response = agent_runnable.invoke(
             {
                 "retrieved_docs": state.get("retrieved_docs", ""),
+                "tms_data": state.get("tms_data", ""),
                 "analysis_agent_messages": state.get("analysis_agent_messages", []),
             }
         )

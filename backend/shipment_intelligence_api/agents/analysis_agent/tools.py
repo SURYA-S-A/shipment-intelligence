@@ -1,4 +1,5 @@
-from langchain_core.tools import StructuredTool, tool
+from langchain_core.tools import tool
+from shipment_intelligence_api.agents.analysis_agent.mock_data import WEATHER_DATA
 
 
 @tool
@@ -6,13 +7,13 @@ def check_weather(location: str) -> str:
     """Check the current weather for a given location.
 
     Args:
-         location: The location to check the weather for should be one of the cities related to the shipment route (e.g., NYC, Chicago, Miami)
+        location: City name related to the shipment route.
     """
-    print(f"Invoking tool: check_weather with location={location}")
-    # TODO: Replace mock data with real weather API integration
-    weather_data = {
-        "NYC": "Rainy, 15°C",
-        "Chicago": "Cloudy, 10°C",
-        "Miami": "Sunny, 25°C",
-    }
-    return weather_data.get(location, "Weather data not available for this location")
+    data = WEATHER_DATA.get(location)
+    if not data:
+        result = f"Weather data not available for {location}"
+    else:
+        result = (
+            f"{location}: {data['condition']}, {data['temp']}, Wind: {data['wind']}"
+        )
+    return result

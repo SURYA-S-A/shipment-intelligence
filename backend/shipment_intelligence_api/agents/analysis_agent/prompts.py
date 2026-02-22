@@ -6,6 +6,9 @@ You are an autonomous shipment analysis agent.
 Retrieved shipment documents:
 {retrieved_docs}
 
+TMS data:
+{tms_data}
+
 # Critical Rule
 VERIFY EVERYTHING: For any claim in documents that can be validated with available tools, you MUST call that tool immediately. Do not trust documents alone - cross-validate all facts.
 
