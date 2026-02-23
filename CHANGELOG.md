@@ -7,6 +7,45 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+# [1.0.0] - 2026-02-23
+
+### Added
+- Implemented full multi-agent orchestration pipeline using LangGraph.
+- Added four specialized agents: Retrieval, Analysis, Response, and Escalation.
+- Retrieval Agent with structured output for fetching customer data, shipment events (via RAG), and TMS data.
+- Analysis Agent with LLM + tool-calling; autonomously selects tools based on context.
+  - Tool: `check_weather` for weather impact analysis.
+- Response Agent with structured output for risk classification.
+- Escalation Agent with tool-calling for notifications and ticketing:
+  - Tools: `send_sms`, `send_email`, `create_support_ticket`.
+- Ingestion step before the pipeline for email/SMS/call events — embeds and stores in Qdrant before triggering agents. TMS events bypass ingestion and trigger the pipeline directly.
+- Agent orchestrator with LangGraph DAG-based workflow and shared state management.
+- Progress tracking per shipment — pipeline writes progress to `progress/{shipment_id}.txt` for demo purposes.
+- Added mock data folder (`mock_data/`) with sample shipment events and data for local testing.
+- Static frontend served via nginx with three pages:
+  - `index.html` — landing page with links to both UIs.
+  - `agents-ui.html` — agent pipeline trigger and manual progress monitor.
+  - `rag-chatbot-ui.html` — RAG chatbot interface.
+- Frontend `config.js` for centralized API base URL and endpoint configuration.
+- Docker setup for frontend using `nginx:alpine`.
+- Added `shipment-intelligence-ui` service to `docker-compose.yaml`.
+- Workflow diagrams added to `docs/`:
+  - `agent-workflow.png` — LangGraph agent pipeline diagram.
+  - `rag-pipeline.png` — RAG pipeline diagram.
+- Comprehensive `README.md` with system overview, ASCII pipeline diagram, tech stack, project structure, getting started guide, API endpoint reference with curl examples, and useful Docker commands.
+
+### Changed
+- Updated `docker-compose.yaml` to include frontend service alongside API and Qdrant.
+- Qdrant URL updated to internal Docker network hostname (`http://qdrant:6333`).
+- Progress fetch in agents UI changed to fully manual — removed auto-polling after pipeline trigger.
+- Frontend log divider text color fixed for visibility in dark theme.
+
+### Notes
+- Both the multi-agent pipeline and RAG chatbot are fully integrated and containerized.
+- Progress tracking and logging are file-based for demo purposes; intended to be replaced with a database or message queue in real-time.
+
+---
+
 ## [0.2.0] - 2026-02-14
 
 ### Added

@@ -1,6 +1,6 @@
 [project]
 name = "shipment-intelligence-api"
-version = "0.2.0"
+version = "1.0.0"
 description = "Agent-based API for shipment intelligence"
 authors = [
     {name = "SURYA",email = "15arul.surya16@gmail.com"}
