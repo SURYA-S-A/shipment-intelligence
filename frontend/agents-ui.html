@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shipment Intelligence System</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Syne:wght@400;600;700&display=swap"
+    rel="stylesheet" />
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #141820;
+      --surface: #1c2330;
+      --border: #2a3545;
+      --accent: #00b4d8;
+      --accent-dim: #0077a8;
+      --text: #c8d4e0;
+      --muted: #5a7a94;
+      --error: #f87171;
+      --mono: 'JetBrains Mono', monospace;
+      --sans: 'Syne', sans-serif;
+    }
+
+    html,
+    body {
+      height: 100%;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      min-height: 100vh;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1.5rem;
+      margin-bottom: 2rem;
+      flex-shrink: 0;
+    }
+
+    header h1 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    header h1 span {
+      color: var(--accent);
+    }
+
+    header p {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 0.3rem;
+      font-family: var(--mono);
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 420px 1fr;
+      gap: 1.5rem;
+      flex: 1;
+      align-items: stretch;
+      width: 100%;
+    }
+
+    .left {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .right {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    .right .card {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+    }
+
+    .card-title {
+      font-size: 0.68rem;
+      font-family: var(--mono);
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 1.2rem;
+    }
+
+    .field {
+      margin-bottom: 1rem;
+    }
+
+    label {
+      display: block;
+      font-size: 0.7rem;
+      font-family: var(--mono);
+      color: var(--muted);
+      margin-bottom: 0.4rem;
+    }
+
+    label .required {
+      color: var(--accent);
+    }
+
+    label .opt {
+      color: #2a3a4a;
+      font-size: 0.62rem;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      padding: 0.55rem 0.75rem;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--accent);
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    select option {
+      background: var(--surface);
+    }
+
+    .tabs {
+      display: flex;
+      margin-bottom: 1.2rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .tab {
+      padding: 0.4rem 1rem;
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      color: var(--muted);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: color 0.15s, border-color 0.15s;
+      margin-bottom: -1px;
+    }
+
+    .tab.active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+
+    .tab-pane {
+      display: none;
+    }
+
+    .tab-pane.active {
+      display: block;
+    }
+
+    .json-editor {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: #7ecfe0;
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      padding: 0.75rem;
+      outline: none;
+      resize: vertical;
+      min-height: 240px;
+      transition: border-color 0.15s;
+    }
+
+    .json-editor:focus {
+      border-color: var(--accent);
+    }
+
+    .btn-primary {
+      width: 100%;
+      padding: 0.65rem;
+      background: var(--accent);
+      color: #000;
+      border: none;
+      border-radius: 4px;
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 0.4rem;
+      transition: opacity 0.15s;
+    }
+
+    .btn-primary:hover {
+      opacity: 0.85;
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+
+    .btn-secondary {
+      width: 100%;
+      padding: 0.6rem;
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      cursor: pointer;
+      margin-top: 0.4rem;
+      transition: border-color 0.15s, color 0.15s;
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .progress-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.2rem;
+      flex-shrink: 0;
+    }
+
+    .status-badge {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
+
+    .status-badge.complete {
+      border-color: var(--accent-dim);
+      color: var(--accent);
+    }
+
+    .status-badge.error {
+      border-color: #7f2a2a;
+      color: var(--error);
+    }
+
+    .log-box {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1rem;
+      font-family: var(--mono);
+      font-size: 0.73rem;
+      line-height: 1.75;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      flex: 1;
+    }
+
+    .line-section {
+      color: var(--accent);
+      display: block;
+      margin: 0.4rem 0 0.1rem;
+    }
+
+    .line-divider {
+      color: #1a2a3a;
+      display: block;
+    }
+
+    .line-content {
+      color: #ffffff;
+      display: block;
+    }
+
+    .line-complete {
+      color: var(--accent);
+      display: block;
+      font-weight: 600;
+    }
+
+    .empty-state {
+      color: var(--muted);
+      font-size: 0.73rem;
+      text-align: center;
+      padding: 4rem 1rem;
+    }
+
+    .poll-info {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      color: var(--muted);
+      margin-top: 0.8rem;
+      flex-shrink: 0;
+    }
+
+    .msg {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      margin-top: 0.5rem;
+      min-height: 1rem;
+    }
+
+    .msg.success {
+      color: var(--accent);
+    }
+
+    .msg.error {
+      color: var(--error);
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <h1>Shipment <span>Intelligent System</span></h1>
+    <p>multi-agent orchestrator workflow — agentic ai — demo interface</p>
+  </header>
+
+  <div class="layout">
+
+    <div class="left">
+
+      <div class="card">
+        <div class="card-title">trigger event</div>
+
+        <div class="tabs">
+          <div class="tab" onclick="switchTab('form')">form</div>
+          <div class="tab active" onclick="switchTab('json')">json</div>
+        </div>
+
+        <div id="tab-form" class="tab-pane">
+          <div class="field">
+            <label>channel <span class="required">*</span></label>
+            <select id="channel" onchange="syncJson()">
+              <option value="tms_event">tms_event</option>
+              <option value="email">email</option>
+              <option value="sms">sms</option>
+              <option value="call">call</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>shipment_id <span class="opt">(optional)</span></label>
+            <input type="text" id="shipment_id" placeholder="SHP1009" oninput="syncJson()" />
+          </div>
+          <div class="field">
+            <label>source <span class="opt">(optional)</span></label>
+            <input type="text" id="source" placeholder="dispatch@carrier.com" oninput="syncJson()" />
+          </div>
+          <div class="field">
+            <label>content <span class="opt">(optional)</span></label>
+            <textarea id="content" placeholder="Shipment SHP1009 delayed due to weather..."
+              oninput="syncJson()"></textarea>
+          </div>
+          <div class="field">
+            <label>timestamp <span class="opt">(optional)</span></label>
+            <input type="datetime-local" id="timestamp" oninput="syncJson()" />
+          </div>
+        </div>
+
+        <div id="tab-json" class="tab-pane active">
+          <div class="field">
+            <label>payload</label>
+            <textarea class="json-editor" id="json-payload" spellcheck="false"></textarea>
+          </div>
+        </div>
+
+        <button class="btn-primary" id="submit-btn" onclick="submitEvent()">Trigger Pipeline</button>
+        <div id="submit-msg" class="msg"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">check progress</div>
+        <div class="field">
+          <label>shipment_id</label>
+          <input type="text" id="progress-id" placeholder="SHP1009" />
+        </div>
+        <button class="btn-secondary" onclick="manualFetch()">Fetch Progress</button>
+        <div id="fetch-msg" class="msg"></div>
+      </div>
+
+    </div>
+
+    <div class="right">
+      <div class="card">
+        <div class="progress-header">
+          <div class="card-title" style="margin-bottom:0">agent progress</div>
+          <span class="status-badge" id="status-badge">idle</span>
+        </div>
+        <div id="log-box" class="log-box">
+          <div class="empty-state">Submit an event or fetch progress by shipment ID...</div>
+        </div>
+        <div class="poll-info" id="poll-info"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="config.js"></script>
+  <script>
+    let pollInterval = null
+    let currentShipmentId = null
+
+    document.getElementById("timestamp").value = new Date().toISOString().slice(0, 16)
+    syncJson()
+
+    function switchTab(name) {
+      document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"))
+      document.querySelectorAll(".tab-pane").forEach(p => p.classList.remove("active"))
+      const idx = name === "form" ? 0 : 1
+      document.querySelectorAll(".tab")[idx].classList.add("active")
+      document.getElementById(`tab-${name}`).classList.add("active")
+      if (name === "json") syncJson()
+    }
+
+    function buildPayload() {
+      return {
+        channel: document.getElementById("channel").value,
+        shipment_id: document.getElementById("shipment_id").value.trim() || null,
+        source: document.getElementById("source").value.trim() || null,
+        content: document.getElementById("content").value.trim() || null,
+        timestamp: (() => {
+          const ts = document.getElementById("timestamp").value
+          return ts ? new Date(ts).toISOString() : null
+        })()
+      }
+    }
+
+    function syncJson() {
+      document.getElementById("json-payload").value = JSON.stringify(buildPayload(), null, 2)
+    }
+
+    async function submitEvent() {
+      const btn = document.getElementById("submit-btn")
+      const isJson = document.getElementById("tab-json").classList.contains("active")
+
+      let payload
+      if (isJson) {
+        try { payload = JSON.parse(document.getElementById("json-payload").value) }
+        catch (e) { showMsg("submit-msg", "Invalid JSON", "error"); return }
+      } else {
+        payload = buildPayload()
+      }
+
+      btn.disabled = true
+      btn.textContent = "Submitting..."
+      showMsg("submit-msg", "", "")
+
+      try {
+        const res = await fetch(`${CONFIG.API_BASE}${CONFIG.ENDPOINTS.TRIGGER}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        })
+        const data = await res.json()
+        if (!res.ok) { showMsg("submit-msg", `Error: ${JSON.stringify(data.detail)}`, "error"); return }
+        currentShipmentId = data.shipment_id
+        showMsg("submit-msg", `Pipeline started — ${currentShipmentId}`, "success")
+        startPolling()
+      } catch (e) {
+        showMsg("submit-msg", `Network error: ${e.message}`, "error")
+      } finally {
+        btn.disabled = false
+        btn.textContent = "Trigger Pipeline"
+      }
+    }
+
+    async function manualFetch() {
+      const id = document.getElementById("progress-id").value.trim()
+      if (!id) { showMsg("fetch-msg", "Enter a shipment ID", "error"); return }
+      currentShipmentId = id
+      clearInterval(pollInterval)
+      showMsg("fetch-msg", "", "")
+      setBadge("idle")
+      await fetchProgress()
+    }
+
+    function startPolling() {
+      clearInterval(pollInterval)
+      setBadge("idle")
+      renderLines(["Pipeline triggered..."])
+      pollInterval = setInterval(async () => {
+        const ok = await fetchProgress()
+        if (!ok) { clearInterval(pollInterval); setBadge("error") }
+      }, 2000)
+    }
+
+    async function fetchProgress() {
+      if (!currentShipmentId) return false
+      try {
+        const res = await fetch(`${CONFIG.API_BASE}${CONFIG.ENDPOINTS.PROGRESS}/${currentShipmentId}`)
+        if (!res.ok) { document.getElementById("poll-info").textContent = `error ${res.status}`; return false }
+        const text = await res.text()
+        if (!text.trim()) { renderLines(["Waiting for pipeline to start..."]); return true }
+        renderLines(text.split("\n"))
+        document.getElementById("poll-info").textContent = `last updated — ${new Date().toLocaleTimeString()}`
+        if (text.includes("PIPELINE COMPLETE")) {
+          clearInterval(pollInterval)
+          setBadge("complete")
+          document.getElementById("poll-info").textContent = "pipeline complete"
+        }
+        return true
+      } catch (e) {
+        document.getElementById("poll-info").textContent = "fetch failed"
+        return false
+      }
+    }
+
+    function renderLines(lines) {
+      const box = document.getElementById("log-box")
+      box.innerHTML = lines.map(line => {
+        if (!line.trim()) return `<span style="display:block;height:0.3rem"></span>`
+        if (line.includes("PIPELINE COMPLETE")) return `<span class="line-complete">${esc(line)}</span>`
+        if (line.startsWith("=")) return `<span class="line-section">${esc(line)}</span>`
+        if (line.startsWith("-")) return `<span class="line-divider">${esc(line)}</span>`
+        return `<span class="line-content">${esc(line)}</span>`
+      }).join("")
+      box.scrollTop = box.scrollHeight
+    }
+
+    function esc(s) { return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;") }
+    function setBadge(state) { const b = document.getElementById("status-badge"); b.textContent = state; b.className = `status-badge ${state}` }
+    function showMsg(id, text, type) { const el = document.getElementById(id); el.textContent = text; el.className = `msg ${type}` }
+  </script>
+
+</body>
+
+</html>

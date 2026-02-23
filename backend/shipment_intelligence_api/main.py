@@ -10,6 +10,7 @@ from shipment_intelligence_api.health.router import (
 from shipment_intelligence_api.rag.router import router as rag_router
 from shipment_intelligence_api.agents.router import router as agents_router
 from shipment_intelligence_api.core.logging import get_logger
+from fastapi.middleware.cors import CORSMiddleware
 
 logger = get_logger(__name__)
 
@@ -39,6 +40,13 @@ app = FastAPI(
 )
 
 app.add_exception_handler(Exception, global_exception_handler)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 app.include_router(health_router)
 app.include_router(rag_router)

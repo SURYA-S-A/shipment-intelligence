@@ -1,3 +1,4 @@
+from pathlib import Path
 from fastapi import APIRouter, BackgroundTasks, Depends
 from shipment_intelligence_api.agents.constants import CommunicationChannel
 from shipment_intelligence_api.agents.schema import (
@@ -9,6 +10,8 @@ from shipment_intelligence_api.core.dependencies import (
     get_agent_service,
     get_rag_service,
 )
+from fastapi.responses import PlainTextResponse
+
 
 router = APIRouter(prefix="/agents", tags=["Agents"])
 
@@ -28,3 +31,15 @@ def handle_incoming_communication(
         rag_service.ingest_event(request)
     background_tasks.add_task(agent_service.process_query, request.shipment_id)
     return {"message": "Communication received", "shipment_id": request.shipment_id}
+
+
+@router.get(
+    "/progress/{shipment_id}",
+    summary="Get Agent Progress",
+    description="Get the progress of the agent pipeline for a specific shipment.",
+)
+def get_progress(shipment_id: str):
+    f = Path(__file__).resolve().parent.parent / "progress" / f"{shipment_id}.txt"
+    if not f.exists():
+        return PlainTextResponse("")
+    return PlainTextResponse(f.read_text(encoding="utf-8", errors="replace"))
