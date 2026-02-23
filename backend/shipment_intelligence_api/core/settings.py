@@ -1,3 +1,4 @@
+from pathlib import Path
 from typing import Optional
 from pydantic import model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -8,6 +9,8 @@ from shipment_intelligence_api.core.constants import (
     QdrantStoreMode,
     SparseEmbeddingProvider,
 )
+
+BASE_DIR = Path(__file__).resolve().parents[2]
 
 
 class Settings(BaseSettings):
@@ -36,7 +39,7 @@ class Settings(BaseSettings):
     QDRANT_COLLECTION: str
 
     model_config = SettingsConfigDict(
-        env_file="../../.env", env_prefix="SHIPMENT_INTELLIGENCE_"
+        env_file=BASE_DIR / ".env", env_prefix="SHIPMENT_INTELLIGENCE_"
     )
 
     @model_validator(mode="after")

@@ -23,11 +23,13 @@ def get_file(shipment_id: str) -> Path:
     return PROGRESS_DIR / f"{shipment_id}.txt"
 
 
-def write_mermaid_graph(compiled_graph: CompiledStateGraph, shipment_id: str):
+def get_mermaid_graph(compiled_graph: CompiledStateGraph) -> str:
     mermaid_graph = compiled_graph.get_graph(xray=True).draw_mermaid()
-    mermaid_graph = (
-        mermaid_graph.replace("\\5b", "_").replace("\\5d", "_").replace("\\2e", "_")
-    )
+    return mermaid_graph.replace("\\5b", "_").replace("\\5d", "_").replace("\\2e", "_")
+
+
+def write_mermaid_graph(compiled_graph: CompiledStateGraph, shipment_id: str):
+    mermaid_graph = get_mermaid_graph(compiled_graph)
     with get_file(shipment_id).open("a") as f:
         f.write(f"\n{'='*80}\n")
         f.write("ORCHESTRATOR GRAPH\n")
