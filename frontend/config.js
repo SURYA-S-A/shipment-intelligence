@@ -1,5 +1,5 @@
 const CONFIG = {
-  API_BASE: "http://localhost:8000/api",
+  API_BASE: "http://localhost:8100/api",
   ENDPOINTS: {
     TRIGGER: "/agents/incoming-communication",
     PROGRESS: "/agents/progress",

@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 from qdrant_client import QdrantClient, models
 from langchain_core.documents import Document
 from langchain_qdrant import QdrantVectorStore, FastEmbedSparse, RetrievalMode
@@ -110,22 +110,40 @@ class QdrantVectorStoreManager:
 
     def query(
         self,
-        shipment_id: str,
         query: str,
+        shipment_id: Optional[str] = None,
         k: int = 5,
     ) -> List[Document]:
-        """Hybrid query filtered by shipment_id."""
+        """Hybrid query with optional shipment_id filter."""
+
         vs = self._get_vector_store()
 
-        qdrant_filter = models.Filter(
-            must=[
-                models.FieldCondition(
-                    key="metadata.shipment_id",
-                    match=models.MatchValue(value=shipment_id),
-                )
-            ]
+        qdrant_filter = None
+
+        # Apply filter only if shipment_id is provided
+        if shipment_id:
+            qdrant_filter = models.Filter(
+                must=[
+                    models.FieldCondition(
+                        key="metadata.shipment_id",
+                        match=models.MatchValue(value=shipment_id),
+                    )
+                ]
+            )
+
+        results = vs.similarity_search(
+            query,
+            k=k,
+            filter=qdrant_filter,
         )
 
-        results = vs.similarity_search(query, k=k, filter=qdrant_filter)
-        logger.debug(f"Retrieved {len(results)} documents for shipment {shipment_id}")
+        logger.debug(
+            f"Retrieved {len(results)} documents"
+            + (
+                f" for shipment {shipment_id}"
+                if shipment_id
+                else " (no shipment filter)"
+            )
+        )
+
         return results

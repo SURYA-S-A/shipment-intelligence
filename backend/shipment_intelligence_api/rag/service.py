@@ -1,9 +1,9 @@
+from shipment_intelligence_api.agents.schema import IncomingCommunicationRequest
 from shipment_intelligence_api.infrastructure.vector_store.qdrant_store_manager import (
     QdrantVectorStoreManager,
 )
 from shipment_intelligence_api.rag.pipeline import ShipmentRAGPipeline
 from shipment_intelligence_api.rag.schema import (
-    IncomingCommunicationRequest,
     ShipmentRAGRequest,
     ShipmentRAGResponse,
 )
@@ -42,7 +42,6 @@ class ShipmentRAGService:
             page_content=request.content,
             metadata={
                 "shipment_id": request.shipment_id,
-                # "event_type": request.event_type,
                 "channel": request.channel,
                 "source": request.source,
                 "timestamp": request.timestamp,
@@ -60,14 +59,12 @@ class ShipmentRAGService:
         """Execute RAG query for shipment intelligence.
 
         Args:
-            request: RAG query request containing shipment_id and question.
+            request: RAG query request containing question.
 
         Returns:
             ShipmentRAGResponse with answer and context documents.
         """
-        result = self.pipeline.run(
-            shipment_id=request.shipment_id, question=request.question
-        )
+        result = self.pipeline.run(question=request.question)
 
         return ShipmentRAGResponse(
             answer=result["answer"], context=result.get("context")

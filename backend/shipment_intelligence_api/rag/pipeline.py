@@ -39,7 +39,6 @@ class ShipmentRAGPipeline:
             Dict with 'context' key containing retrieved documents.
         """
         docs = self.qdrant_store_manager.query(
-            shipment_id=state["shipment_id"],
             query=state["question"],
         )
         return {"context": docs}
@@ -84,11 +83,10 @@ class ShipmentRAGPipeline:
 
         return graph.compile()
 
-    def run(self, shipment_id: str, question: str) -> dict:
+    def run(self, question: str) -> dict:
         """Execute the RAG pipeline for a given query.
 
         Args:
-            shipment_id: Shipment identifier to query.
             question: User's question about the shipment.
 
         Returns:
@@ -96,7 +94,6 @@ class ShipmentRAGPipeline:
         """
         return self.compiled_graph.invoke(
             {
-                "shipment_id": shipment_id,
                 "question": question,
             }
         )
