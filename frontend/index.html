@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Shipment Intelligence System</title>
+  <style>
+    :root[data-theme="dark"] {
+      --bg: #0f1117;
+      --surface: #1a1d27;
+      --border: #2a2d3a;
+      --accent: #2563eb;
+      --text: #e2e8f0;
+      --muted: #64748b;
+    }
+    :root[data-theme="light"] {
+      --bg: #f5f7fa;
+      --surface: #ffffff;
+      --border: #e2e8f0;
+      --accent: #2563eb;
+      --text: #1e293b;
+      --muted: #94a3b8;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .theme-btn {
+      position: fixed;
+      top: 1.2rem;
+      right: 1.5rem;
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--muted);
+      cursor: pointer;
+      padding: 0.3rem 0.75rem;
+      font-size: 0.8rem;
+      font-family: inherit;
+      transition: border-color 0.15s, color 0.15s;
+    }
+    .theme-btn:hover { border-color: var(--accent); color: var(--text); }
+
+    .hero {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .hero h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.5rem;
+    }
+
+    .hero h1 span { color: var(--accent); }
+
+    .hero p {
+      font-size: 0.88rem;
+      color: var(--muted);
+    }
+
+    .cards {
+      display: flex;
+      gap: 1.2rem;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem 2.5rem;
+      text-decoration: none;
+      color: var(--text);
+      width: 220px;
+      text-align: center;
+      transition: border-color 0.2s, transform 0.15s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .card:hover {
+      border-color: var(--accent);
+      transform: translateY(-3px);
+    }
+
+    .card-icon { font-size: 2rem; }
+
+    .card-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .card-desc {
+      font-size: 0.78rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .card-link {
+      margin-top: 0.5rem;
+      font-size: 0.75rem;
+      color: var(--accent);
+    }
+  </style>
+</head>
+<body>
+
+  <button class="theme-btn" id="theme-btn" onclick="toggleTheme()">☀️ Light</button>
+
+  <div class="hero">
+    <h1>Shipment <span>Intelligence System</span></h1>
+    <p>multi-agent orchestrator — agentic ai — demo interface</p>
+  </div>
+
+  <div class="cards">
+    <a class="card" href="agents-ui.html">
+      <div class="card-icon">🤖</div>
+      <div class="card-title">Agent Pipeline</div>
+      <div class="card-desc">Trigger events and monitor multi-agent workflow progress</div>
+      <div class="card-link">Open →</div>
+    </a>
+
+    <a class="card" href="rag-chatbot-ui.html">
+      <div class="card-icon">💬</div>
+      <div class="card-title">RAG Chat</div>
+      <div class="card-desc">Query shipment data using retrieval augmented generation</div>
+      <div class="card-link">Open →</div>
+    </a>
+  </div>
+
+  <script>
+    function toggleTheme() {
+      const html = document.documentElement
+      const isLight = html.getAttribute('data-theme') === 'light'
+      html.setAttribute('data-theme', isLight ? 'dark' : 'light')
+      document.getElementById('theme-btn').textContent = isLight ? '☀️ Light' : '🌙 Dark'
+    }
+  </script>
+
+</body>
+</html>

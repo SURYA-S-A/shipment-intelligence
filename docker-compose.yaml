@@ -26,6 +26,19 @@ services:
       - shipment-intelligence-network
     restart: unless-stopped
 
+  shipment-intelligence-ui:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: shipment-intelligence-ui
+    ports:
+      - "3000:80"
+    depends_on:
+      - shipment-intelligence-api
+    networks:
+      - shipment-intelligence-network
+    restart: unless-stopped
+
 networks:
   shipment-intelligence-network:
     driver: bridge
