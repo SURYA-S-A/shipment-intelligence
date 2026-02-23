@@ -40,7 +40,6 @@ class QdrantVectorStoreManager:
     def init_collection(self) -> None:
         """Create collection with dense + sparse vectors and payload index."""
         if not self.client.collection_exists(collection_name=self.collection_name):
-
             vector_size = len(self.embeddings.embed_query("dimension check"))
 
             self.client.create_collection(

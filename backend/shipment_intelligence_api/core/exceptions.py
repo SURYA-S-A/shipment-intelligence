@@ -7,7 +7,7 @@ logger = get_logger(__name__)
 
 async def global_exception_handler(request: Request, exc: Exception):
     """Global exception handler for unhandled exceptions"""
-    logger.error(f"Unhandled exception", exc_info=True)
+    logger.error("Unhandled exception", exc_info=True)
 
     return JSONResponse(
         status_code=500,

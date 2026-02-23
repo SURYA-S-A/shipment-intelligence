@@ -31,18 +31,18 @@ def get_mermaid_graph(compiled_graph: CompiledStateGraph) -> str:
 def write_mermaid_graph(compiled_graph: CompiledStateGraph, shipment_id: str):
     mermaid_graph = get_mermaid_graph(compiled_graph)
     with get_file(shipment_id).open("a") as f:
-        f.write(f"\n{'='*80}\n")
+        f.write(f"\n{'=' * 80}\n")
         f.write("ORCHESTRATOR GRAPH\n")
-        f.write(f"{'='*80}\n\n")
+        f.write(f"{'=' * 80}\n\n")
         f.write(mermaid_graph)
-        f.write(f"\n{'='*80}\n\n")
+        f.write(f"\n{'=' * 80}\n\n")
 
 
 def write_agent_messages(shipment_id: str, title: str, messages: list):
     with get_file(shipment_id).open("a") as f:
-        f.write(f"\n{'='*80}\n")
+        f.write(f"\n{'=' * 80}\n")
         f.write(f"{title}\n")
-        f.write(f"{'='*80}\n\n")
+        f.write(f"{'=' * 80}\n\n")
         if not messages:
             f.write("No messages.\n\n")
             return
@@ -57,11 +57,10 @@ def write_agent_messages(shipment_id: str, title: str, messages: list):
 
 def write_response(shipment_id: str, response: dict):
     with get_file(shipment_id).open("a", encoding="utf-8") as f:
-
         # Retrieval agent messages
-        f.write(f"\n{'='*80}\n")
+        f.write(f"\n{'=' * 80}\n")
         f.write("RETRIEVAL AGENT\n")
-        f.write(f"{'='*80}\n\n")
+        f.write(f"{'=' * 80}\n\n")
         f.write(f"Shipment ID: {response.get('shipment_id', 'N/A')}\n")
         f.write(f"Question: {response.get('question', 'N/A')}\n")
         f.write(f"TMS Data: {response.get('tms_data', 'N/A')}\n")
@@ -78,9 +77,9 @@ def write_response(shipment_id: str, response: dict):
 
     # Analysis agent
     with get_file(shipment_id).open("a", encoding="utf-8") as f:
-        f.write(f"\n{'='*80}\n")
+        f.write(f"\n{'=' * 80}\n")
         f.write("ANALYSIS AGENT\n")
-        f.write(f"{'='*80}\n\n")
+        f.write(f"{'=' * 80}\n\n")
         f.write(f"Detailed Analysis:\n{response.get('detailed_analysis', 'N/A')}\n")
 
     write_agent_messages(
@@ -91,9 +90,9 @@ def write_response(shipment_id: str, response: dict):
 
     # Response agent
     with get_file(shipment_id).open("a", encoding="utf-8") as f:
-        f.write(f"\n{'='*80}\n")
+        f.write(f"\n{'=' * 80}\n")
         f.write("RESPONSE AGENT\n")
-        f.write(f"{'='*80}\n\n")
+        f.write(f"{'=' * 80}\n\n")
         f.write(f"Should Escalate: {response.get('should_escalate', False)}\n\n")
         response_output = response.get("response_output", {})
         for key, value in response_output.items():
@@ -113,6 +112,6 @@ def write_response(shipment_id: str, response: dict):
     )
 
     with get_file(shipment_id).open("a", encoding="utf-8") as f:
-        f.write(f"\n{'='*80}\n")
+        f.write(f"\n{'=' * 80}\n")
         f.write("WORKFLOW COMPLETE\n")
-        f.write(f"{'='*80}\n")
+        f.write(f"{'=' * 80}\n")
