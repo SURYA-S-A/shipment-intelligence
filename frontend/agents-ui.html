@@ -1,33 +1,47 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Shipment Intelligence System</title>
-  <link
-    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Syne:wght@400;600;700&display=swap"
-    rel="stylesheet" />
   <style>
+    :root[data-theme="dark"] {
+      --bg: #0f1117;
+      --surface: #1a1d27;
+      --border: #2a2d3a;
+      --accent: #2563eb;
+      --accent-glow: rgba(37, 99, 235, 0.15);
+      --text: #e2e8f0;
+      --muted: #64748b;
+      --error: #f87171;
+      --log-section: #60a5fa;
+      --log-divider: #ffffff;
+      --log-content: #e2e8f0;
+      --log-bg: #0f1117;
+    }
+
+    :root[data-theme="light"] {
+      --bg: #f5f7fa;
+      --surface: #ffffff;
+      --border: #e2e8f0;
+      --accent: #2563eb;
+      --accent-glow: rgba(37, 99, 235, 0.08);
+      --text: #1e293b;
+      --muted: #94a3b8;
+      --error: #dc2626;
+      --log-section: #2563eb;
+      --log-divider: #e2e8f0;
+      --log-content: #1e293b;
+      --log-bg: #f8fafc;
+    }
+
     *,
     *::before,
     *::after {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-    }
-
-    :root {
-      --bg: #141820;
-      --surface: #1c2330;
-      --border: #2a3545;
-      --accent: #00b4d8;
-      --accent-dim: #0077a8;
-      --text: #c8d4e0;
-      --muted: #5a7a94;
-      --error: #f87171;
-      --mono: 'JetBrains Mono', monospace;
-      --sans: 'Syne', sans-serif;
     }
 
     html,
@@ -38,22 +52,26 @@
     body {
       background: var(--bg);
       color: var(--text);
-      font-family: var(--sans);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       min-height: 100vh;
       padding: 2rem;
       display: flex;
       flex-direction: column;
+      transition: background 0.2s, color 0.2s;
     }
 
     header {
       border-bottom: 1px solid var(--border);
-      padding-bottom: 1.5rem;
+      padding-bottom: 1.2rem;
       margin-bottom: 2rem;
       flex-shrink: 0;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
     }
 
     header h1 {
-      font-size: 1.4rem;
+      font-size: 1.25rem;
       font-weight: 700;
       letter-spacing: -0.02em;
     }
@@ -63,10 +81,28 @@
     }
 
     header p {
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       color: var(--muted);
       margin-top: 0.3rem;
-      font-family: var(--mono);
+    }
+
+    .theme-btn {
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--muted);
+      cursor: pointer;
+      padding: 0.3rem 0.75rem;
+      font-size: 0.8rem;
+      font-family: inherit;
+      transition: border-color 0.15s, color 0.15s;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .theme-btn:hover {
+      border-color: var(--accent);
+      color: var(--text);
     }
 
     .layout {
@@ -99,16 +135,16 @@
     .card {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 8px;
+      border-radius: 10px;
       padding: 1.5rem;
     }
 
     .card-title {
-      font-size: 0.68rem;
-      font-family: var(--mono);
+      font-size: 0.72rem;
+      font-weight: 600;
       color: var(--accent);
       text-transform: uppercase;
-      letter-spacing: 0.1em;
+      letter-spacing: 0.08em;
       margin-bottom: 1.2rem;
     }
 
@@ -118,8 +154,7 @@
 
     label {
       display: block;
-      font-size: 0.7rem;
-      font-family: var(--mono);
+      font-size: 0.72rem;
       color: var(--muted);
       margin-bottom: 0.4rem;
     }
@@ -129,7 +164,7 @@
     }
 
     label .opt {
-      color: #2a3a4a;
+      color: var(--border);
       font-size: 0.62rem;
     }
 
@@ -139,10 +174,10 @@
       width: 100%;
       background: var(--bg);
       border: 1px solid var(--border);
-      border-radius: 4px;
+      border-radius: 6px;
       color: var(--text);
-      font-family: var(--mono);
-      font-size: 0.78rem;
+      font-family: inherit;
+      font-size: 0.85rem;
       padding: 0.55rem 0.75rem;
       outline: none;
       transition: border-color 0.15s;
@@ -152,6 +187,11 @@
     select:focus,
     textarea:focus {
       border-color: var(--accent);
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+      color: var(--muted);
     }
 
     textarea {
@@ -171,8 +211,7 @@
 
     .tab {
       padding: 0.4rem 1rem;
-      font-family: var(--mono);
-      font-size: 0.68rem;
+      font-size: 0.75rem;
       color: var(--muted);
       cursor: pointer;
       border-bottom: 2px solid transparent;
@@ -197,10 +236,10 @@
       width: 100%;
       background: var(--bg);
       border: 1px solid var(--border);
-      border-radius: 4px;
-      color: #7ecfe0;
-      font-family: var(--mono);
-      font-size: 0.75rem;
+      border-radius: 6px;
+      color: var(--text);
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 0.78rem;
       padding: 0.75rem;
       outline: none;
       resize: vertical;
@@ -216,11 +255,11 @@
       width: 100%;
       padding: 0.65rem;
       background: var(--accent);
-      color: #000;
+      color: #fff;
       border: none;
-      border-radius: 4px;
-      font-family: var(--mono);
-      font-size: 0.78rem;
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 0.85rem;
       font-weight: 600;
       cursor: pointer;
       margin-top: 0.4rem;
@@ -228,7 +267,7 @@
     }
 
     .btn-primary:hover {
-      opacity: 0.85;
+      opacity: 0.88;
     }
 
     .btn-primary:disabled {
@@ -242,9 +281,9 @@
       background: transparent;
       color: var(--text);
       border: 1px solid var(--border);
-      border-radius: 4px;
-      font-family: var(--mono);
-      font-size: 0.78rem;
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 0.85rem;
       cursor: pointer;
       margin-top: 0.4rem;
       transition: border-color 0.15s, color 0.15s;
@@ -264,30 +303,30 @@
     }
 
     .status-badge {
-      font-family: var(--mono);
-      font-size: 0.65rem;
-      padding: 0.2rem 0.6rem;
+      font-size: 0.68rem;
+      padding: 0.2rem 0.65rem;
       border-radius: 20px;
       border: 1px solid var(--border);
       color: var(--muted);
     }
 
     .status-badge.complete {
-      border-color: var(--accent-dim);
+      border-color: var(--accent);
       color: var(--accent);
+      background: var(--accent-glow);
     }
 
     .status-badge.error {
-      border-color: #7f2a2a;
+      border-color: var(--error);
       color: var(--error);
     }
 
     .log-box {
-      background: var(--bg);
+      background: var(--log-bg);
       border: 1px solid var(--border);
-      border-radius: 4px;
+      border-radius: 6px;
       padding: 1rem;
-      font-family: var(--mono);
+      font-family: 'SF Mono', 'Fira Code', monospace;
       font-size: 0.73rem;
       line-height: 1.75;
       overflow-y: auto;
@@ -296,18 +335,18 @@
     }
 
     .line-section {
-      color: var(--accent);
+      color: var(--log-section);
       display: block;
       margin: 0.4rem 0 0.1rem;
     }
 
     .line-divider {
-      color: #1a2a3a;
+      color: var(--log-divider);
       display: block;
     }
 
     .line-content {
-      color: #ffffff;
+      color: var(--log-content);
       display: block;
     }
 
@@ -319,22 +358,21 @@
 
     .empty-state {
       color: var(--muted);
-      font-size: 0.73rem;
+      font-size: 0.8rem;
       text-align: center;
       padding: 4rem 1rem;
+      font-family: inherit;
     }
 
     .poll-info {
-      font-family: var(--mono);
-      font-size: 0.65rem;
+      font-size: 0.68rem;
       color: var(--muted);
       margin-top: 0.8rem;
       flex-shrink: 0;
     }
 
     .msg {
-      font-family: var(--mono);
-      font-size: 0.7rem;
+      font-size: 0.75rem;
       margin-top: 0.5rem;
       min-height: 1rem;
     }
@@ -352,8 +390,11 @@
 <body>
 
   <header>
-    <h1>Shipment <span>Intelligent System</span></h1>
-    <p>multi-agent orchestrator workflow — agentic ai — demo interface</p>
+    <div>
+      <h1>Shipment <span>Intelligent System</span></h1>
+      <p>multi-agent orchestrator workflow — agentic ai — demo interface</p>
+    </div>
+    <button class="theme-btn" id="theme-btn" onclick="toggleTheme()">☀️ Light</button>
   </header>
 
   <div class="layout">
@@ -443,6 +484,13 @@
     document.getElementById("timestamp").value = new Date().toISOString().slice(0, 16)
     syncJson()
 
+    function toggleTheme() {
+      const html = document.documentElement
+      const isLight = html.getAttribute('data-theme') === 'light'
+      html.setAttribute('data-theme', isLight ? 'dark' : 'light')
+      document.getElementById('theme-btn').textContent = isLight ? '☀️ Light' : '🌙 Dark'
+    }
+
     function switchTab(name) {
       document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"))
       document.querySelectorAll(".tab-pane").forEach(p => p.classList.remove("active"))
@@ -495,7 +543,6 @@
         if (!res.ok) { showMsg("submit-msg", `Error: ${JSON.stringify(data.detail)}`, "error"); return }
         currentShipmentId = data.shipment_id
         showMsg("submit-msg", `Pipeline started — ${currentShipmentId}`, "success")
-        startPolling()
       } catch (e) {
         showMsg("submit-msg", `Network error: ${e.message}`, "error")
       } finally {
