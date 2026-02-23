@@ -197,14 +197,6 @@ cd shipment-intelligence
 cp backend/.env.example backend/.env
 ```
 
-Edit `backend/.env`:
-
-```env
-OPENAI_API_KEY=your_openai_api_key
-QDRANT_URL=http://qdrant:6333
-QDRANT_API_KEY=mysecretapikey
-```
-
 ### 3. Run with Docker
 
 ```bash
