@@ -102,7 +102,7 @@ A separate LangGraph + LangChain pipeline for natural language queries against s
 User Query → retrieve_documents (Qdrant hybrid search) → generate_answer (LLM) → Response
 ```
 
-![RAG Pipeline](./docs/rag-pipeline.png)
+![RAG Pipeline](./docs/rag-chatbot-workflow.png)
 
 ---
 
