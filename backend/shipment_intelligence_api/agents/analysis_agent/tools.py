@@ -1,5 +1,5 @@
 from langchain_core.tools import tool
-from shipment_intelligence_api.agents.analysis_agent.mock_data import WEATHER_DATA
+from mock_data.data import WEATHER_DATA
 
 
 @tool

@@ -4,7 +4,7 @@ from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain.messages import SystemMessage
 from langgraph.graph import START, END, StateGraph
 from shipment_intelligence_api.agents.orchestrator.state import ShipmentWorkflowState
-from shipment_intelligence_api.agents.retrieval_agent.mock_data import (
+from mock_data.data import (
     get_customer_data,
     get_tms_data,
 )
