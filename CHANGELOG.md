@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.0.1] - 2026-05-03
+
+### Added
+
+* Added editable `.drawio` files for all architecture diagrams.
+* Added exported `.png`/`.svg` versions for documentation and README rendering.
+
+---
+
 # [1.0.0] - 2026-02-23
 
 ### Added
