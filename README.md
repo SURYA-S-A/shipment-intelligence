@@ -24,69 +24,7 @@ A **customized multi-agent workflow DAG** built with LangGraph. Each agent is a 
 
 Incoming events are handled differently depending on their channel before entering the pipeline:
 
-```
-Incoming Event
-      │
-      ├── channel: email / sms / call
-      │         │
-      │         ▼
-      │   ┌─────────────────────────────┐
-      │   │     Ingestion Step          │
-      │   │  Embed & store event in     │
-      │   │  Qdrant vector store        │
-      │   │  → then trigger pipeline    │
-      │   └─────────────┬───────────────┘
-      │                 │
-      └── channel: tms  │
-                │       │
-                └───────┘
-                        │
-                        ▼
-        ┌─────────────────────────────────────┐
-        │         Retrieval Agent             │
-        │  (LLM — structured output &         │
-        │   data fetching)                    │
-        │  • fetch_customer_data (ext. API)   │
-        │  • fetch_shipment_event (RAG)       │
-        │  • fetch_tms_data (ext. API)        │
-        └────────────────┬────────────────────┘
-                         │
-                         ▼
-        ┌─────────────────────────────────────┐
-        │          Analysis Agent             │
-        │  (LLM + tools — chooses tools       │
-        │   based on context)                 │
-        │  Tools:                             │
-        │    - check_weather                  │
-        └────────────────┬────────────────────┘
-                         │
-                         ▼
-        ┌─────────────────────────────────────┐
-        │          Response Agent             │
-        │  (LLM — structured output,          │
-        │   no tools)                         │
-        │  • Risk classification:             │
-        │    LOW      → < 12h delay           │
-        │    MEDIUM   → 12–24h delay          │
-        │    HIGH     → > 24h delay           │
-        │    CRITICAL → > 48h delay           │
-        │  • should_escalate = true if        │
-        │    risk is MEDIUM or higher         │
-        │  • Generates confidence score       │
-        │    (0.0–1.0) & summary              │
-        └────────────────┬────────────────────┘
-                         │ (MEDIUM / HIGH / CRITICAL)
-                         ▼
-        ┌─────────────────────────────────────┐
-        │         Escalation Agent            │
-        │  (LLM + tools — chooses tools       │
-        │   based on risk & context)          │
-        │  Tools:                             │
-        │    - send_sms                       │
-        │    - send_email                     │
-        │    - create_support_ticket          │
-        └─────────────────────────────────────┘
-```
+![Multi-Agent Pipeline](docs/shipment-intelligence-multi-agent-pipeline.png)
 
 ### Workflow Diagram
 
